@@ -1,0 +1,70 @@
+2026-03-13 10:27:38,528 - INFO - 初始化MinIO客户端 - 端点: s3.nacta.edu.cn, 桶: lable-studio
+2026-03-13 10:27:38,528 - DEBUG - Access Key: 3C5N...mknB
+2026-03-13 10:27:38,528 - INFO - ✅ MinIO客户端初始化成功
+2026-03-13 10:27:38,528 - INFO - MinIO客户端版本: 7.2.20
+2026-03-13 10:27:38,529 - DEBUG - MinIO安装路径: C:\Users\wangjian\anaconda3\Lib\site-packages\minio\__init__.py
+2026-03-13 10:27:38,529 - DEBUG - 检查可用方法:
+2026-03-13 10:27:38,529 - DEBUG -   - presigned_get_object: 可用
+2026-03-13 10:27:38,529 - DEBUG -   - get_presigned_url: 可用
+2026-03-13 10:27:38,529 - INFO - ============================================================
+2026-03-13 10:27:38,529 - INFO - 开始 MinIO 功能测试
+2026-03-13 10:27:38,529 - INFO - 时间: 2026-03-13 10:27:38
+2026-03-13 10:27:38,529 - INFO - 日志文件: logs\minio_test_20260313_102738.log
+2026-03-13 10:27:38,530 - INFO - ============================================================
+2026-03-13 10:27:38,530 - INFO - 
+[测试1] 连接测试
+2026-03-13 10:27:38,530 - INFO - ----------------------------------------
+2026-03-13 10:27:38,530 - INFO - 尝试连接到MinIO服务器...
+2026-03-13 10:27:38,948 - INFO - ✅ 连接成功！当前存在的桶: ['lable-studio']
+2026-03-13 10:27:38,949 - INFO - ✅ 目标桶 'lable-studio' 存在
+2026-03-13 10:27:38,949 - INFO - ✅ 连接测试通过
+2026-03-13 10:27:38,949 - INFO - 
+[测试2] 桶访问测试
+2026-03-13 10:27:38,949 - INFO - ----------------------------------------
+2026-03-13 10:27:38,949 - INFO - 检查桶 'lable-studio' 是否存在...
+2026-03-13 10:27:39,040 - INFO - ✅ 桶 'lable-studio' 存在
+2026-03-13 10:27:39,040 - INFO - 尝试列出桶 'lable-studio' 中的对象...
+2026-03-13 10:27:39,084 - INFO - ✅ 可以列出桶内对象，当前有 0 个对象
+2026-03-13 10:27:39,084 - INFO - ✅ 桶访问测试通过
+2026-03-13 10:27:39,085 - INFO - 
+[测试3] 上传/下载测试
+2026-03-13 10:27:39,085 - INFO - ----------------------------------------
+2026-03-13 10:27:39,085 - INFO - 创建测试文件: test_file_20260313_102739.bin (大小: 102400 字节)
+2026-03-13 10:27:39,085 - INFO - 原始数据MD5: 3fbbdd48d594971305847c14c046ea0c
+2026-03-13 10:27:39,085 - INFO - 开始上传文件: test_file_20260313_102739.bin
+2026-03-13 10:27:39,314 - INFO - ✅ 上传成功! ETag: 3fbbdd48d594971305847c14c046ea0c
+2026-03-13 10:27:39,314 - DEBUG - 上传结果完整信息: ObjectWriteResult(bucket_name='lable-studio', object_name='test_file_20260313_102739.bin', version_id='9afe55e7-acb4-49ad-a7fc-da1f53f23a57', etag='3fbbdd48d594971305847c14c046ea0c', http_headers=HTTPHeaderDict({'Server': 'openresty', 'Date': 'Fri, 13 Mar 2026 02:23:04 GMT', 'Content-Length': '0', 'Connection': 'keep-alive', 'Accept-Ranges': 'bytes', 'Content-Security-Policy': 'block-all-mixed-content', 'ETag': '"3fbbdd48d594971305847c14c046ea0c"', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', 'Vary': 'Origin, Accept-Encoding', 'X-Amz-Id-2': '5ad687027f1dc36c3ad44c06381603a12ff780b15850890281227e9d0d946bcb', 'X-Amz-Request-Id': '189C4594AF0DA737', 'X-Content-Type-Options': 'nosniff', 'X-Xss-Protection': '1; mode=block', 'x-amz-version-id': '9afe55e7-acb4-49ad-a7fc-da1f53f23a57'}), last_modified=None, location=None)
+2026-03-13 10:27:39,353 - INFO - ✅ 对象信息 - 大小: 102400 字节, ETag: 3fbbdd48d594971305847c14c046ea0c
+2026-03-13 10:27:39,354 - DEBUG - 对象完整信息: Object(bucket_name='lable-studio', object_name='test_file_20260313_102739.bin', last_modified=datetime.datetime(2026, 3, 13, 2, 27, 38, tzinfo=datetime.timezone.utc), etag='3fbbdd48d594971305847c14c046ea0c', size=102400, metadata=HTTPHeaderDict({'Server': 'openresty', 'Date': 'Fri, 13 Mar 2026 02:23:04 GMT', 'Content-Type': 'application/octet-stream', 'Content-Length': '102400', 'Connection': 'keep-alive', 'Accept-Ranges': 'bytes', 'Content-Security-Policy': 'block-all-mixed-content', 'ETag': '"3fbbdd48d594971305847c14c046ea0c"', 'Last-Modified': 'Fri, 13 Mar 2026 02:27:38 GMT', 'Strict-Transport-Security': 'max-age=31536000; includeSubDomains', 'Vary': 'Origin, Accept-Encoding', 'X-Amz-Id-2': '5ad687027f1dc36c3ad44c06381603a12ff780b15850890281227e9d0d946bcb', 'X-Amz-Request-Id': '189C4594B8F0A2CF', 'X-Content-Type-Options': 'nosniff', 'X-Xss-Protection': '1; mode=block', 'x-amz-version-id': '9afe55e7-acb4-49ad-a7fc-da1f53f23a57'}), version_id='9afe55e7-acb4-49ad-a7fc-da1f53f23a57', is_latest=None, storage_class=None, owner_id=None, owner_name=None, content_type='application/octet-stream', is_delete_marker=False, tags=None, is_dir=False)
+2026-03-13 10:27:39,354 - INFO - 开始下载文件: test_file_20260313_102739.bin
+2026-03-13 10:27:39,475 - INFO - ✅ 下载成功! 大小: 102400 字节
+2026-03-13 10:27:39,475 - INFO - 下载数据MD5: 3fbbdd48d594971305847c14c046ea0c
+2026-03-13 10:27:39,476 - INFO - ✅ 数据完整性验证通过 (MD5匹配)
+2026-03-13 10:27:39,476 - INFO - ✅ 上传/下载测试通过
+2026-03-13 10:27:39,476 - INFO - 
+[测试4] 列出对象测试
+2026-03-13 10:27:39,476 - INFO - ----------------------------------------
+2026-03-13 10:27:39,476 - INFO - 列出桶 'lable-studio' 中的对象:
+2026-03-13 10:27:39,541 - INFO -   - test_file_20260313_102739.bin (大小: 102400 字节, 最后修改: 2026-03-13 02:27:38.173000+00:00)
+2026-03-13 10:27:39,541 - INFO - ✅ 列出对象成功，共 1 个对象
+2026-03-13 10:27:39,541 - INFO - ✅ 列出对象测试通过
+2026-03-13 10:27:39,541 - INFO - 
+[测试5] 预签名URL测试
+2026-03-13 10:27:39,541 - INFO - ----------------------------------------
+2026-03-13 10:27:39,542 - INFO - 测试生成预签名URL for: test_file_20260313_102739.bin
+2026-03-13 10:27:39,542 - DEBUG - 方法1失败: 'int' object has no attribute 'total_seconds'
+2026-03-13 10:27:39,542 - INFO - ✅ 方法2成功: 使用presigned_get_object(timedelta参数)
+2026-03-13 10:27:39,542 - DEBUG - 下载URL: https://s3.nacta.edu.cn/lable-studio/test_file_20260313_102739.bin?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=3C5NHhW8jrOtX4cHmknB%2F20260313%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260313T022739Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=08b5d70caf696466043168791b773714f4a0e6a071a08d8aafb8c193efb6b83f
+2026-03-13 10:27:39,542 - INFO - ✅ 预签名URL测试通过
+2026-03-13 10:27:39,542 - INFO - 
+[测试6] 删除文件测试
+2026-03-13 10:27:39,542 - INFO - ----------------------------------------
+2026-03-13 10:27:39,542 - INFO - 尝试删除文件: test_file_20260313_102739.bin
+2026-03-13 10:27:39,642 - INFO - ✅ 删除文件成功: test_file_20260313_102739.bin
+2026-03-13 10:27:39,677 - INFO - ✅ 文件已不存在，删除验证通过
+2026-03-13 10:27:39,678 - INFO - ✅ 删除测试通过
+2026-03-13 10:27:39,678 - INFO - ============================================================
+2026-03-13 10:27:39,678 - INFO - 🎉 所有测试通过！
+2026-03-13 10:27:39,678 - INFO - ============================================================
+2026-03-13 10:27:39,679 - INFO - 
+✅ MinIO 服务正常运行，所有功能测试通过！

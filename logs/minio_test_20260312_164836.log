@@ -1,0 +1,129 @@
+2026-03-12 16:48:36,962 - INFO - 初始化MinIO客户端 - 端点: s3.nacta.edu.cn, 桶: lable-studio
+2026-03-12 16:48:36,962 - DEBUG - Access Key: UibK...3HBo
+2026-03-12 16:48:36,965 - INFO - ✅ MinIO客户端初始化成功
+2026-03-12 16:48:36,965 - INFO - MinIO客户端版本: 7.2.20
+2026-03-12 16:48:36,965 - DEBUG - MinIO安装路径: C:\Users\wangjian\anaconda3\Lib\site-packages\minio\__init__.py
+2026-03-12 16:48:36,966 - DEBUG - 检查可用方法:
+2026-03-12 16:48:36,966 - DEBUG -   - presigned_get_object: 可用
+2026-03-12 16:48:36,966 - DEBUG -   - get_presigned_url: 可用
+2026-03-12 16:48:36,966 - INFO - ============================================================
+2026-03-12 16:48:36,966 - INFO - 开始 MinIO 功能测试
+2026-03-12 16:48:36,966 - INFO - 时间: 2026-03-12 16:48:36
+2026-03-12 16:48:36,966 - INFO - 日志文件: logs\minio_test_20260312_164836.log
+2026-03-12 16:48:36,966 - INFO - ============================================================
+2026-03-12 16:48:36,966 - INFO - 
+[测试1] 连接测试
+2026-03-12 16:48:36,966 - INFO - ----------------------------------------
+2026-03-12 16:48:36,967 - INFO - 尝试连接到MinIO服务器...
+2026-03-12 16:48:37,689 - INFO - ✅ 连接成功！当前存在的桶: ['lable-studio']
+2026-03-12 16:48:37,689 - INFO - ✅ 目标桶 'lable-studio' 存在
+2026-03-12 16:48:37,689 - INFO - ✅ 连接测试通过
+2026-03-12 16:48:37,689 - INFO - 
+[测试2] 桶访问测试
+2026-03-12 16:48:37,690 - INFO - ----------------------------------------
+2026-03-12 16:48:37,690 - INFO - 检查桶 'lable-studio' 是否存在...
+2026-03-12 16:48:37,721 - ERROR - ❌ 桶访问测试失败: S3 operation failed; code: AccessDenied, message: Access Denied., resource: /lable-studio, request_id: 189C0BCA6BDCB182, host_id: 5ad687027f1dc36c3ad44c06381603a12ff780b15850890281227e9d0d946bcb, bucket_name: lable-studio
+2026-03-12 16:48:37,721 - ERROR - 错误代码: AccessDenied, 错误信息: Access Denied.
+2026-03-12 16:48:37,724 - DEBUG - Traceback (most recent call last):
+  File "D:\workapp\label-studio-Chinese\test_minio.py", line 131, in test_bucket_access
+    found = self.client.bucket_exists(self.bucket_name)
+  File "C:\Users\wangjian\anaconda3\Lib\site-packages\minio\api.py", line 700, in bucket_exists
+    self._execute("HEAD", bucket_name)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\wangjian\anaconda3\Lib\site-packages\minio\api.py", line 441, in _execute
+    region = self._get_region(bucket_name)
+  File "C:\Users\wangjian\anaconda3\Lib\site-packages\minio\api.py", line 498, in _get_region
+    response = self._url_open(
+        "GET",
+    ...<2 lines>...
+        query_params={"location": ""},
+    )
+  File "C:\Users\wangjian\anaconda3\Lib\site-packages\minio\api.py", line 427, in _url_open
+    raise response_error
+minio.error.S3Error: S3 operation failed; code: AccessDenied, message: Access Denied., resource: /lable-studio, request_id: 189C0BCA6BDCB182, host_id: 5ad687027f1dc36c3ad44c06381603a12ff780b15850890281227e9d0d946bcb, bucket_name: lable-studio
+
+2026-03-12 16:48:37,724 - ERROR - ❌ 桶访问测试失败
+2026-03-12 16:48:37,724 - INFO - 
+[测试3] 上传/下载测试
+2026-03-12 16:48:37,724 - INFO - ----------------------------------------
+2026-03-12 16:48:37,725 - INFO - 创建测试文件: test_file_20260312_164837.bin (大小: 102400 字节)
+2026-03-12 16:48:37,725 - INFO - 原始数据MD5: 5a90ca054b0949f2b47c0c6557818d41
+2026-03-12 16:48:37,725 - INFO - 开始上传文件: test_file_20260312_164837.bin
+2026-03-12 16:48:37,756 - ERROR - ❌ 上传/下载测试失败: S3 operation failed; code: AccessDenied, message: Access Denied., resource: /lable-studio, request_id: 189C0BCA6DF68422, host_id: 5ad687027f1dc36c3ad44c06381603a12ff780b15850890281227e9d0d946bcb, bucket_name: lable-studio
+2026-03-12 16:48:37,756 - ERROR - 错误代码: AccessDenied, 错误信息: Access Denied.
+2026-03-12 16:48:37,759 - DEBUG - Traceback (most recent call last):
+  File "D:\workapp\label-studio-Chinese\test_minio.py", line 183, in test_upload_download
+    result = self.client.put_object(
+        bucket_name=self.bucket_name,
+    ...<3 lines>...
+        content_type='application/octet-stream'
+    )
+  File "C:\Users\wangjian\anaconda3\Lib\site-packages\minio\api.py", line 2015, in put_object
+    raise exc
+  File "C:\Users\wangjian\anaconda3\Lib\site-packages\minio\api.py", line 1960, in put_object
+    return self._put_object(
+           ~~~~~~~~~~~~~~~~^
+        bucket_name, object_name, part_data, headers,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "C:\Users\wangjian\anaconda3\Lib\site-packages\minio\api.py", line 1789, in _put_object
+    response = self._execute(
+        "PUT",
+    ...<5 lines>...
+        no_body_trace=True,
+    )
+  File "C:\Users\wangjian\anaconda3\Lib\site-packages\minio\api.py", line 441, in _execute
+    region = self._get_region(bucket_name)
+  File "C:\Users\wangjian\anaconda3\Lib\site-packages\minio\api.py", line 498, in _get_region
+    response = self._url_open(
+        "GET",
+    ...<2 lines>...
+        query_params={"location": ""},
+    )
+  File "C:\Users\wangjian\anaconda3\Lib\site-packages\minio\api.py", line 427, in _url_open
+    raise response_error
+minio.error.S3Error: S3 operation failed; code: AccessDenied, message: Access Denied., resource: /lable-studio, request_id: 189C0BCA6DF68422, host_id: 5ad687027f1dc36c3ad44c06381603a12ff780b15850890281227e9d0d946bcb, bucket_name: lable-studio
+
+2026-03-12 16:48:37,759 - ERROR - ❌ 上传/下载测试失败
+2026-03-12 16:48:37,759 - INFO - 
+[测试4] 列出对象测试
+2026-03-12 16:48:37,759 - INFO - ----------------------------------------
+2026-03-12 16:48:37,759 - INFO - 列出桶 'lable-studio' 中的对象:
+2026-03-12 16:48:37,856 - ERROR - ❌ 列出对象失败: S3 operation failed; code: AccessDenied, message: Access Denied., resource: /lable-studio, request_id: 189C0BCA73E749B0, host_id: 5ad687027f1dc36c3ad44c06381603a12ff780b15850890281227e9d0d946bcb, bucket_name: lable-studio
+2026-03-12 16:48:37,856 - ERROR - 错误代码: AccessDenied, 错误信息: Access Denied.
+2026-03-12 16:48:37,857 - DEBUG - Traceback (most recent call last):
+  File "D:\workapp\label-studio-Chinese\test_minio.py", line 247, in test_list_objects
+    for obj in objects:
+               ^^^^^^^
+  File "C:\Users\wangjian\anaconda3\Lib\site-packages\minio\api.py", line 3329, in _list_objects
+    response = self._execute(
+        "GET",
+    ...<2 lines>...
+        headers=extra_headers,
+    )
+  File "C:\Users\wangjian\anaconda3\Lib\site-packages\minio\api.py", line 441, in _execute
+    region = self._get_region(bucket_name)
+  File "C:\Users\wangjian\anaconda3\Lib\site-packages\minio\api.py", line 498, in _get_region
+    response = self._url_open(
+        "GET",
+    ...<2 lines>...
+        query_params={"location": ""},
+    )
+  File "C:\Users\wangjian\anaconda3\Lib\site-packages\minio\api.py", line 427, in _url_open
+    raise response_error
+minio.error.S3Error: S3 operation failed; code: AccessDenied, message: Access Denied., resource: /lable-studio, request_id: 189C0BCA73E749B0, host_id: 5ad687027f1dc36c3ad44c06381603a12ff780b15850890281227e9d0d946bcb, bucket_name: lable-studio
+
+2026-03-12 16:48:37,858 - ERROR - ❌ 列出对象测试失败
+2026-03-12 16:48:37,858 - INFO - 
+[测试5] 预签名URL测试
+2026-03-12 16:48:37,858 - INFO - ----------------------------------------
+2026-03-12 16:48:37,858 - WARNING - ⚠️ 没有可用的文件，跳过预签名URL测试
+2026-03-12 16:48:37,858 - INFO - 
+[测试6] 删除文件测试
+2026-03-12 16:48:37,858 - INFO - ----------------------------------------
+2026-03-12 16:48:37,858 - INFO - ============================================================
+2026-03-12 16:48:37,858 - ERROR - ❌ 测试完成，但有失败的测试项: 桶访问测试, 上传/下载测试, 列出对象测试
+2026-03-12 16:48:37,858 - INFO - ============================================================
+2026-03-12 16:48:37,859 - ERROR - 
+❌ 测试失败，请检查配置和权限！

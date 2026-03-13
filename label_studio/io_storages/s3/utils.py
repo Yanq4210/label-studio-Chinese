@@ -1,14 +1,13 @@
-"""This file and its contents are licensed under the Apache License 2.0. Please see the included NOTICE for copyright information and LICENSE for a copy of the license.
-"""
 import base64
 import fnmatch
 import logging
+import mimetypes
 import re
 from urllib.parse import urlparse
 
 import boto3
-from botocore.config import Config
 from botocore.exceptions import ClientError
+from core.utils.params import get_env
 from django.conf import settings
 from tldextract import TLDExtract
 
@@ -18,30 +17,33 @@ logger = logging.getLogger(__name__)
 def get_client_and_resource(
     aws_access_key_id=None, aws_secret_access_key=None, aws_session_token=None, region_name=None, s3_endpoint=None
 ):
-    aws_access_key_id = aws_access_key_id
-    aws_secret_access_key = aws_secret_access_key
-    aws_session_token = aws_session_token
+    aws_access_key_id = aws_access_key_id or get_env('AWS_ACCESS_KEY_ID')
+    aws_secret_access_key = aws_secret_access_key or get_env('AWS_SECRET_ACCESS_KEY')
+    aws_session_token = aws_session_token or get_env('AWS_SESSION_TOKEN')
     logger.debug(
         f'Create boto3 session with '
         f'access key id={aws_access_key_id}, '
         f'secret key={aws_secret_access_key[:4] + "..." if aws_secret_access_key else None}, '
         f'session token={aws_session_token}'
     )
-    s3 = boto3.client(
-        's3',
+    session = boto3.Session(
         aws_access_key_id=aws_access_key_id,
         aws_secret_access_key=aws_secret_access_key,
-        endpoint_url=s3_endpoint,
-        config=Config(s3={"addressing_style": "virtual"},
-                      signature_version='v4'))
-    res = boto3.resource(
-        's3',
-        aws_access_key_id=aws_access_key_id,
-        aws_secret_access_key=aws_secret_access_key,
-        endpoint_url=s3_endpoint,
-        config=Config(s3={"addressing_style": "virtual"},
-                      signature_version='v4'))
-    return s3, res
+        aws_session_token=aws_session_token,
+    )
+    settings = {'region_name': region_name or get_env('S3_region') or 'us-east-1'}
+    s3_endpoint = s3_endpoint or get_env('S3_ENDPOINT')
+    if s3_endpoint:
+        settings['endpoint_url'] = s3_endpoint
+    # ====== 开始修改的地方 ======
+    # 强行指定使用 path 模式，解决 MinIO 拼接域名报错问题
+    custom_config = boto3.session.Config(
+        signature_version='s3v4',
+        s3={'addressing_style': 'path'} 
+    )
+    client = session.client('s3', config=custom_config, verify=False, **settings)
+    resource = session.resource('s3', config=custom_config, verify=False, **settings)
+    return client, resource
 
 
 def resolve_s3_url(url, client, presign=True, expires_in=3600):
@@ -58,9 +60,17 @@ def resolve_s3_url(url, client, presign=True, expires_in=3600):
 
     # Otherwise try to generate presigned url
     try:
-        presigned_url = client.generate_presigned_url(
-            ClientMethod='get_object', Params={'Bucket': bucket_name, 'Key': key}, ExpiresIn=expires_in
-        )
+        params = {'Bucket': bucket_name, 'Key': key}
+
+        # Override response Content-Type based on file extension so that S3 returns
+        # the correct MIME type even if the object was uploaded without one.
+        # Without this, S3 may return binary/octet-stream which causes browsers
+        # to download files instead of displaying them inline (e.g. images, audio, video).
+        content_type, _ = mimetypes.guess_type(key)
+        if content_type:
+            params['ResponseContentType'] = content_type
+
+        presigned_url = client.generate_presigned_url(ClientMethod='get_object', Params=params, ExpiresIn=expires_in)
     except ClientError as exc:
         logger.warning(f"Can't generate presigned URL. Reason: {exc}")
         return url
