@@ -169,7 +169,7 @@ export const HomePage: Page = () => {
           </SimpleCard>
         </section>
         <section className="flex flex-col gap-6">
-          <HeidiTips collection="projectSettings" />
+          {/* <HeidiTips collection="projectSettings" /> */}
           <SimpleCard
             title={t("home_page.resources.title", "Resources")}
             description={t("home_page.resources.description", "Learn, explore and get help")}

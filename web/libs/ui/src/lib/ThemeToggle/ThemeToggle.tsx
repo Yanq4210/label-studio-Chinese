@@ -3,7 +3,6 @@ import styles from "./ThemeToggle.module.scss";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ReactComponent as Sun } from "./icons/sun.svg";
 import { ReactComponent as Moon } from "./icons/moon.svg";
-import { Badge } from "@humansignal/ui";
 import { atom, useSetAtom } from "jotai";
 
 interface ThemeToggleProps {
@@ -11,6 +10,7 @@ interface ThemeToggleProps {
 }
 
 const THEME_OPTIONS = ["Auto", "Light", "Dark"];
+const THEME_LABELS: Record<string, string> = { Auto: "自动", Light: "浅色", Dark: "深色" };
 const PREFERRED_COLOR_SCHEME_KEY = "preferred-color-scheme";
 
 export const getCurrentTheme = () => {
@@ -49,10 +49,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ className }) => {
     setThemeAtom(newTheme);
   }, [theme]);
 
-  const themeLabel = useMemo(
-    () => THEME_OPTIONS.find((option) => option.toLowerCase() === theme.toLowerCase()),
-    [theme],
-  );
+  const themeLabel = useMemo(() => THEME_LABELS[theme] ?? theme, [theme]);
 
   return (
     <button
@@ -70,9 +67,6 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ className }) => {
         </div>
       </div>
       <span className={clsx(styles.themeToggle__label)}>{themeLabel}</span>
-      <Badge variant="beta" className={styles.betaBadge}>
-        Beta
-      </Badge>
     </button>
   );
 };

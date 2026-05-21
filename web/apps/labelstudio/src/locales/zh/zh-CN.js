@@ -217,8 +217,8 @@ export const TRANSLATIONS_ZH = {
       create_new_project: "创建新项目",
       pagination_label: "项目",
       empty: {
-        alt_text: "海蒂在寻找项目",
-        title: "海蒂在这里没有看到任何项目！",
+        alt_text: "正在寻找项目",
+        title: "这里没有看到任何项目！",
         subtitle: "创建一个项目并开始标注您的数据吧。",
       },
       card: {

@@ -1,3 +1,7 @@
 # Ensure shell script uses LF.
 Dockerfile  eol=lf
 *.sh        eol=lf
+
+# Normalize line endings
+*.md text eol=lf
+*.json text eol=lf
