@@ -207,7 +207,7 @@ export const HomePage: Page = () => {
   );
 };
 
-HomePage.title = "Home";
+HomePage.title = "主页";
 HomePage.path = "/";
 HomePage.exact = true;
 

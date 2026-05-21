@@ -22,7 +22,7 @@ if (ALLOW_ORGANIZATION_WEBHOOKS) {
 
 export const OrganizationPage = {
   // 将 'Organization' 改为一个翻译键
-  title: "organization",
+  title: "组织",
   path: "/organization",
   exact: true,
   layout: MenuLayout,

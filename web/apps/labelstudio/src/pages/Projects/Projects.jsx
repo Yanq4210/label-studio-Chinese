@@ -156,7 +156,7 @@ export const ProjectsPage = () => {
 // 在这种情况下，我们保持 key 的一致性，翻译工作会在渲染这个标题的组件中完成。
 // 或者，如果路由系统支持，可以将其改为一个函数。
 // 这里我们保持原样，但在 `zh.json` 中提供翻译。
-ProjectsPage.title = "Projects";
+ProjectsPage.title = "项目";
 ProjectsPage.path = "/projects";
 ProjectsPage.exact = true;
 ProjectsPage.routes = ({ store }) => [
