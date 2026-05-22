@@ -1,4 +1,4 @@
-import { IconExternal, IconFolderAdd, IconHumanSignal, IconUserAdd, IconFolderOpen } from "@humansignal/icons";
+import { IconFolderAdd, IconUserAdd, IconFolderOpen } from "@humansignal/icons";
 import { Button, SimpleCard, Spinner, Typography } from "@humansignal/ui";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -34,29 +34,6 @@ export const HomePage: Page = () => {
       });
     },
   });
-
-  const resources = [
-    {
-      title: t("home_page.resources.documentation", "Documentation"),
-      url: "https://labelstud.io/guide/",
-    },
-    {
-      title: t("home_page.resources.api_documentation", "API Documentation"),
-      url: "https://api.labelstud.io/api-reference/introduction/getting-started",
-    },
-    {
-      title: t("home_page.resources.release_notes", "Release Notes"),
-      url: "https://labelstud.io/learn/categories/release-notes/",
-    },
-    {
-      title: t("home_page.resources.ls_blog", "LabelStud.io Blog"),
-      url: "https://labelstud.io/blog/",
-    },
-    {
-      title: t("home_page.resources.slack_community", "Slack Community"),
-      url: "https://slack.labelstud.io",
-    },
-  ];
 
   const actions = [
     {
@@ -170,35 +147,7 @@ export const HomePage: Page = () => {
         </section>
         <section className="flex flex-col gap-6">
           {/* <HeidiTips collection="projectSettings" /> */}
-          <SimpleCard
-            title={t("home_page.resources.title", "Resources")}
-            description={t("home_page.resources.description", "Learn, explore and get help")}
-            data-testid="resources-card"
-          >
-            <ul>
-              {resources.map((link) => {
-                return (
-                  <li key={link.title}>
-                    <a
-                      href={link.url}
-                      className="py-2 px-1 flex justify-between items-center text-neutral-content"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      {link.title}
-                      <IconExternal className="text-primary-icon" />
-                    </a>
-                  </li>
-                );
-              })}
-            </ul>
-          </SimpleCard>
-          <div className="flex gap-2 items-center">
-            <IconHumanSignal />
-            <span className="text-neutral-content-subtle">
-              {t("home_page.ls_version", "Label Studio Version: Community")}
-            </span>
-          </div>
+          {/* 资源卡片和版本提示已精简掉 */}
         </section>
       </div>
       {creationDialogOpen && <CreateProject onClose={() => setCreationDialogOpen(false)} />}

@@ -3,17 +3,13 @@
 import { createContext, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { StaticContent } from "../../app/StaticContent/StaticContent";
 import {
-  IconBook,
   IconFolder,
   IconHome,
   IconHotkeys,
   IconPeople,
   IconPersonInCircle,
   IconPin,
-  IconTerminal,
   IconDoor,
-  IconGithub,
-  IconSlack,
 } from "@humansignal/icons";
 import { LSLogo } from "../../assets/images";
 import { Button, Userpic, ThemeToggle } from "@humansignal/ui";
@@ -26,7 +22,7 @@ import { Breadcrumbs } from "../Breadcrumbs/Breadcrumbs";
 import { Dropdown } from "../Dropdown/Dropdown";
 import { Hamburger } from "../Hamburger/Hamburger";
 import { Menu } from "../Menu/Menu";
-import { VersionNotifier, VersionProvider } from "../VersionNotifier/VersionNotifier";
+import { VersionProvider } from "../VersionNotifier/VersionNotifier";
 import "./Menubar.scss";
 import "./MenuContent.scss";
 import "./MenuSidebar.scss";
@@ -242,36 +238,7 @@ export const Menubar = ({ enabled, defaultOpened, defaultPinned, children, onSid
 
                 <Menu.Spacer />
 
-                <VersionNotifier showNewVersion />
-
-                <Menu.Item
-                  label={t("sidebar.api")}
-                  href="https://api.labelstud.io/api-reference/introduction/getting-started"
-                  icon={<IconTerminal />}
-                  target="_blank"
-                />
-                <Menu.Item
-                  label={t("sidebar.docs")}
-                  href="https://labelstud.io/guide"
-                  icon={<IconBook />}
-                  target="_blank"
-                />
-                <Menu.Item
-                  label={t("sidebar.github")}
-                  href="https://github.com/HumanSignal/label-studio"
-                  icon={<IconGithub />}
-                  target="_blank"
-                  rel="noreferrer"
-                />
-                <Menu.Item
-                  label={t("sidebar.slack_community")}
-                  href="https://slack.labelstud.io/?source=product-menu"
-                  icon={<IconSlack />}
-                  target="_blank"
-                  rel="noreferrer"
-                />
-
-                <VersionNotifier showCurrentVersion />
+                {/* 底部链接区域已精简掉（VersionNotifier + API/文档/GitHub/Slack） */}
 
                 <Menu.Divider />
 
