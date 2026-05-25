@@ -26,10 +26,6 @@ COPY web/package.json .
 COPY web/yarn.lock .
 COPY web/tools tools
 
-# RUN --mount=type=cache,target=/root/web/.yarn,id=yarn-cache,sharing=locked \
-#    --mount=type=cache,target=/root/web/.nx,id=nx-cache,sharing=locked \
-#    yarn install --prefer-offline --no-progress --pure-lockfile --frozen-lockfile --ignore-engines --non-interactive --production=false
-
 RUN --mount=type=cache,target=/root/web/.yarn,id=yarn-cache,sharing=shared \
     --mount=type=cache,target=/root/web/.nx,id=nx-cache,sharing=shared \
     yarn install \
@@ -88,12 +84,15 @@ RUN python /tmp/install-poetry.py
 RUN sed -i 's|deb.debian.org|mirrors.aliyun.com|g' /etc/apt/sources.list 2>/dev/null || true; \
     sed -i 's|deb.debian.org|mirrors.aliyun.com|g' /etc/apt/sources.list.d/debian.sources 2>/dev/null || true
 
+# 合并安装所有构建依赖（原分两次，现一次搞定）
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
     set -eux; \
     apt-get update; \
     apt-get install --no-install-recommends -y \
-            build-essential git; \
+            build-essential \
+            git \
+            ca-certificates; \
     apt-get autoremove -y
 
 WORKDIR /label-studio
@@ -105,32 +104,12 @@ COPY pyproject.toml poetry.lock README.md ./
 
 ARG INCLUDE_DEV=false
 
-#RUN --mount=type=cache,target=/.poetry-cache,id=poetry-cache,sharing=locked \
-#    poetry source add --priority=primary tuna https://pypi.tuna.tsinghua.edu.cn/simple/ && \
-#    poetry lock && \
-#    if [ "$INCLUDE_DEV" = "true" ]; then \
-#        poetry install --no-root --extras uwsgi --with test; \
-#    else \
-#        poetry install --no-root --without test --extras uwsgi; \
-#    fi
-
-
-# 先安装 git 和 ca-certificates（解决 git+https 依赖）
-RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-    --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
-    apt-get update && \
-    apt-get install --no-install-recommends -y git ca-certificates && \
-    apt-get autoremove -y
-
+# 不再 poetry source add（避免修改 pyproject.toml）
+# 不再 poetry lock（构建时不应重新生成锁文件）
 RUN --mount=type=cache,target=/.poetry-cache,id=poetry-cache,sharing=locked \
-    poetry source add --priority=primary tuna https://pypi.tuna.tsinghua.edu.cn/simple/ && \
-    # 关键修复：配置 git 使用 https 协议，避免 ssh/git 协议问题
     git config --global url."https://github.com/".insteadOf git@github.com: && \
     git config --global url."https://".insteadOf git:// && \
-    # 限制并发，降低网络压力（香港访问 GitHub 容易不稳定）
     poetry config installer.max-workers 2 && \
-    # 使用 --no-update 避免每次都重新解析全部依赖（加快速度）
-    poetry lock --no-interaction && \
     if [ "$INCLUDE_DEV" = "true" ]; then \
         poetry install --no-root --extras uwsgi --with test --no-interaction; \
     else \
@@ -139,8 +118,9 @@ RUN --mount=type=cache,target=/.poetry-cache,id=poetry-cache,sharing=locked \
 
 COPY label_studio label_studio
 
+# --extras uwsgi is mandatory here due to Poetry issue #7302
 RUN --mount=type=cache,target=/.poetry-cache,id=poetry-cache,sharing=locked \
-    poetry install --only-root --extras uwsgi && \
+    poetry install --only-root --extras uwsgi --no-interaction && \
     python3 label_studio/manage.py collectstatic --no-input
 
 ################################ Stage: py-version-generator
@@ -173,7 +153,7 @@ WORKDIR $LS_DIR
 RUN sed -i 's|deb.debian.org|mirrors.aliyun.com|g' /etc/apt/sources.list 2>/dev/null || true; \
     sed -i 's|deb.debian.org|mirrors.aliyun.com|g' /etc/apt/sources.list.d/debian.sources 2>/dev/null || true
 
-# === 系统包安装（保持你的原有）===
+# === 系统包安装 ===
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
     set -eux; \
@@ -196,18 +176,15 @@ COPY --chown=1001:0 pyproject.toml poetry.lock README.md LICENSE ./
 COPY --chown=1001:0 licenses licenses
 
 # ==================== 关键修复部分 ====================
-# 完整、明确地复制整个 deploy 目录（推荐方式）
 COPY --chown=1001:0 deploy /label-studio/deploy
 
-# 额外保险措施：强制确保 common 目录存在并复制文件（防止 build cache 或 .dockerignore 导致缺失）
 RUN mkdir -p /label-studio/deploy/docker-entrypoint.d/common && \
     cp -a deploy/docker-entrypoint.d/common/. /label-studio/deploy/docker-entrypoint.d/common/ 2>/dev/null || true
 
-# 给所有 .sh 文件加上执行权限（使用完整路径）
 RUN find /label-studio/deploy -name "*.sh" -exec chmod +x {} \;
 # ======================================================
 
-# 从其他 stage 复制代码和静态资源（去重）
+# 从其他 stage 复制代码和静态资源
 COPY --chown=1001:0 --from=venv-builder $LS_DIR $LS_DIR
 COPY --chown=1001:0 --from=py-version-generator $LS_DIR/label_studio/core/version_.py $LS_DIR/label_studio/core/version_.py
 COPY --chown=1001:0 --from=frontend-builder $LS_DIR/web/dist $LS_DIR/web/dist
