@@ -84,3 +84,6 @@ docker-compose.override.yml
 CLAUDE.local.md
 web/libs/editor/tests/coverage
 .cache
+.claude/
+Dockerfile.bak
+汉化说明.md
