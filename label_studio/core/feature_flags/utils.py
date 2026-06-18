@@ -6,7 +6,7 @@ def get_user_repr(user):
     user_data['key'] = user_data['email']
     if user.active_organization is not None:
         user_data['custom'] = {
-            'organization': user.active_organization.created_by.email,
+            'organization': user.active_organization.created_by.email if user.active_organization.created_by else None,
             'organization_id': user.active_organization.id,
         }
     else:
