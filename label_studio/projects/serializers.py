@@ -103,7 +103,10 @@ class ProjectSerializer(FlexFieldsModelSerializer):
         try:
             return self.context['request'].user.id
         except KeyError:
-            return next(iter(self.context['user_cache']))
+            cache = self.context.get('user_cache')
+            if cache:
+                return next(iter(cache))
+            return None
 
     @staticmethod
     def get_config_has_control_tags(project) -> bool:
